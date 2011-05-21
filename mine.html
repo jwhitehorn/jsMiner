@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <script type="text/javascript" src="/jsMiner.js"></script>
+    <script type="text/javascript">
+	  var params = {};
+	  var queryString = window.location.search.substring(1);
+	  var vars = queryString.split("&"); 
+	  for(var i = 0; i != vars.length; i++){
+		if(vars[i].indexOf("=") != -1){
+			var pair = vars[i].split("=");
+			params[pair[0]] = pair[1];
+		}
+	  }
+      var engine = new jsMiner.engine(params);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
