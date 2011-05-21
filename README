@@ -1,0 +1,6 @@
+jsMiner, Copyright 2011. Please see LICENSE for more details.
+
+This is a Javascript based Bitcoin miner. The same software originally written for http://bitp.it/.
+
+
+It utilizes HTML 5 web workers, where present, otherwise it defaults back to running in the UI thread utilizing setTimeout.
