@@ -2,6 +2,7 @@
 
 jsMiner.engine = function(options){
   this.publisherId = "";
+  this.siteId = "";
   this.delayBetweenNonce = 30;
   this.sha = new Sha256();
   this.hashRate = 0;
@@ -13,6 +14,8 @@ jsMiner.engine = function(options){
   if(options){
     if (options.hasOwnProperty("clientId"))
       this.clientId = options.clientId;
+    if (options.hasOwnProperty("siteId"))
+      this.siteId = options.siteId;
     if (options.hasOwnProperty("delay"))
       this.delayBetweenNonce = options.delay;
     if (options.hasOwnProperty("forceUIThread"))
@@ -25,6 +28,9 @@ jsMiner.engine = function(options){
     
   this.loadMoreWork = function(result){
     var url = "/work?client_id=" + this.clientId;
+    if(this.siteId != ""){
+	  url = url + "&site_id=" + this.siteId;
+    }
     if(this.hashRate > 0){
       url = url + "&hash_rate=" + this.hashRate;
     }
