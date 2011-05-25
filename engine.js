@@ -32,7 +32,7 @@ jsMiner.engine = function(options){
 	  url = url + "&site_id=" + this.siteId;
     }
     if(this.hashRate > 0){
-      url = url + "&hash_rate=" + this.hashRate;
+      url = url + "&hash_rate=" + this.hashRate + "&hash_count=" + (this.hashRate * 1000 * this.workerTimeout);
     }
     var me = this;
     var httpRequest;
