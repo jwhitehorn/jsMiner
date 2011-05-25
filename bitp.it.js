@@ -6,7 +6,7 @@ function addLoadEvent(fun) {
 
 function bitpit(params) {
   addLoadEvent(function() {
-  	var url = "http://api.bitp.it/mine?";
+  	var url = window.location.protocol + "://api.bitp.it/mine?";
   	for(var name in params){
   		url = url + name + "=" + params[name] + "&";
   	}
