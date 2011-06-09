@@ -9,7 +9,7 @@ jsMiner.engine = function(options){
   this.workerRunning = false;
   this.forceUIThread = false;
   this.autoStart = true;
-  this.workerTimeout = 30;
+  this.workerTimeout = 90;
   
   if(options){
     if (options.hasOwnProperty("clientId"))
