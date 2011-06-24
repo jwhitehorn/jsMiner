@@ -10,7 +10,7 @@ jsMiner.engine = function(options){
   this.forceUIThread = false;
   this.autoStart = true;
   this.workerTimeout = 90;
-  
+
   if(options){
     if (options.hasOwnProperty("clientId"))
       this.clientId = options.clientId;
@@ -25,7 +25,7 @@ jsMiner.engine = function(options){
     if (options.hasOwnProperty("workerTimeout"))
       this.workerTimeout = options.workerTimeout;
   }
-    
+
   this.loadMoreWork = function(result){
     var url = "/work?client_id=" + this.clientId;
     if(this.siteId != ""){
@@ -57,7 +57,7 @@ jsMiner.engine = function(options){
         }
       };
     } else { /* you're fucked! */}
-    
+
     if(!httpRequest)
       return;
 
@@ -70,20 +70,20 @@ jsMiner.engine = function(options){
       httpRequest.send(jsMiner.Util.toPoolString(result));
     }
   };
-  
+
   this.handleGetWorkResponse = function(response){
     var work = eval("(" + response + ")");
     var midstate = jsMiner.Util.fromPoolString(work.midstate);
     var half = work.data.substring(0, 128);
     var data = work.data.substring(128, 256);
-    data = jsMiner.Util.fromPoolString(data); 
+    data = jsMiner.Util.fromPoolString(data);
     half = jsMiner.Util.fromPoolString(half);
     var hash1 = jsMiner.Util.fromPoolString(work.hash1);
-    var target = jsMiner.Util.fromPoolString(work.target);  
-    
+    var target = jsMiner.Util.fromPoolString(work.target);
+
     this.workerEntry(midstate, half, data, hash1, target, work.first_nonce, work.last_nonce);
   };
-  
+
   this.webWorkerEntry = function(midstate, half, data, hash1, target, startNonce, endNonce){
     var me = this;
     var startTime = (new Date()).getTime() ;
@@ -99,16 +99,16 @@ jsMiner.engine = function(options){
     this.webWorker.postMessage({
       midstate: midstate,
       half: half,
-      data: data, 
-      hash1: hash1, 
-      target: target, 
-      startNonce: startNonce, 
+      data: data,
+      hash1: hash1,
+      target: target,
+      startNonce: startNonce,
       endNonce: endNonce,
       pubId: this.publisherId,
       timeout: this.workerTimeout
     });
   };
-  
+
   this.workerEntry = function(midstate, half, data, hash1, target, startNonce, endNonce){
     if(!!window.Worker && !this.forceUIThread){
       this.webWorkerEntry(midstate, half, data, hash1, target, startNonce, endNonce);
@@ -120,14 +120,14 @@ jsMiner.engine = function(options){
     var startTime = (new Date()).getTime() ;
     var endTime = startTime + this.workerTimeout * 1000;
     this.workerRunning = true;
-    
+
     var workerDone = function(result){
       var stopTime = (new Date()).getTime() ;
       me.workerRunning = false;
       me.hashRate = (nonce - startNonce) / (stopTime - startTime) * 1000;
       me.loadMoreWork(result);
     };
-    
+
     function worker(){
 
       for(var i = 0; i != 100 && nonce < endNonce; i++){
@@ -145,8 +145,8 @@ jsMiner.engine = function(options){
     };
     setTimeout(worker, delay);
   };
-  
-  this.tryHash = function(midstate, half, data, hash1, target, nonce){  
+
+  this.tryHash = function(midstate, half, data, hash1, target, nonce){
     data[3] = nonce;
     this.sha.reset();
 
@@ -163,7 +163,7 @@ jsMiner.engine = function(options){
       return ret;
     } else return null;
   };
-          
+
   //bootstrap
   if(this.autoStart)
     this.loadMoreWork();

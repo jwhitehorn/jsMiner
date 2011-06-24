@@ -16,7 +16,7 @@ jsMiner.Util = {
     }
     return arr;
   },
-  
+
   uint32_array_to_hex: function(arr) {
     var hex = '';
     for (var i = 0; i < arr.length; i++) {
@@ -27,7 +27,7 @@ jsMiner.Util = {
     }
     return hex;
   },
-  
+
   byte_to_hex: function(b) {
     var tab = '0123456789abcdef';
     b = b & 0xff;
@@ -41,7 +41,7 @@ jsMiner.Util = {
            ((w >>>  8) & 0x0000ff00) |
            ((w >>> 24) & 0x000000ff);
   },
-  
+
   reverseBytesInWords: function(words) {
     var reversed = [];
     for(var i = 0; i < words.length; i++)
@@ -52,7 +52,7 @@ jsMiner.Util = {
   fromPoolString: function(hex) {
     return jsMiner.Util.reverseBytesInWords(jsMiner.Util.hex_to_uint32_array(hex));
   },
-  
+
   toPoolString: function(data) {
     return jsMiner.Util.uint32_array_to_hex(jsMiner.Util.reverseBytesInWords(data));
   }
@@ -63,7 +63,7 @@ module = module || {};
 module.exports = jsMiner.Util;
 
 Sha256 = function(init, data) {
-  
+
   var K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
            0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
            0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -72,9 +72,9 @@ Sha256 = function(init, data) {
            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
            0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
-  
+
   var H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
-  
+
   var add = function (x, y) {
     var lsw = (x & 0xFFFF) + (y & 0xFFFF);
     var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -87,12 +87,12 @@ Sha256 = function(init, data) {
       sum = add(sum, arguments[i]);
     return sum;
   };
-  
+
   var set_state = function(target, source) {
     for (var i = 0; i < 8; i++)
       target[i] = source[i];
   };
-  
+
   var extend_work = function(work, w) {
     for (var i = 0; i < 16; i++)
       work[i] = w[i];
@@ -104,23 +104,23 @@ Sha256 = function(init, data) {
     }
     return w;
   };
-  
+
   var rotr = function(x, n) {
     return (x >>> n) | (x << (32 - n));
   };
-  
+
   var shr = function(x, n) {
     return (x >>> n);
   };
-  
+
   this.state = [0,0,0,0,0,0,0,0];
   set_state(this.state, H);
-  
+
   this.work = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  
+
   this.hex = function() {
     return jsMiner.Util.uint32_array_to_hex(this.state);
   };
@@ -129,7 +129,7 @@ Sha256 = function(init, data) {
     set_state(this.state, H);
     return this;
   };
-  
+
   this.update = function(init, data) {
     if (!data) { data = init; init = null; }
     if (typeof(init) == 'string')
@@ -164,7 +164,7 @@ Sha256 = function(init, data) {
     s[7] = add(s[7], h);
     return this;
   };
-  
+
   if (init) this.update(init, data);
 };
 
@@ -182,7 +182,7 @@ jsMiner.engine = function(options){
   this.forceUIThread = false;
   this.autoStart = true;
   this.workerTimeout = 30;
-  
+
   if(options){
     if (options.hasOwnProperty("clientId"))
       this.clientId = options.clientId;
@@ -197,7 +197,7 @@ jsMiner.engine = function(options){
     if (options.hasOwnProperty("workerTimeout"))
       this.workerTimeout = options.workerTimeout;
   }
-    
+
   this.loadMoreWork = function(result){
     var url = "/work?client_id=" + this.clientId;
     if(this.siteId != ""){
@@ -229,7 +229,7 @@ jsMiner.engine = function(options){
         }
       };
     } else { /* you're fucked! */}
-    
+
     if(!httpRequest)
       return;
 
@@ -242,20 +242,20 @@ jsMiner.engine = function(options){
       httpRequest.send(jsMiner.Util.toPoolString(result));
     }
   };
-  
+
   this.handleGetWorkResponse = function(response){
     var work = eval("(" + response + ")");
     var midstate = jsMiner.Util.fromPoolString(work.midstate);
     var half = work.data.substring(0, 128);
     var data = work.data.substring(128, 256);
-    data = jsMiner.Util.fromPoolString(data); 
+    data = jsMiner.Util.fromPoolString(data);
     half = jsMiner.Util.fromPoolString(half);
     var hash1 = jsMiner.Util.fromPoolString(work.hash1);
-    var target = jsMiner.Util.fromPoolString(work.target);  
-    
+    var target = jsMiner.Util.fromPoolString(work.target);
+
     this.workerEntry(midstate, half, data, hash1, target, work.first_nonce, work.last_nonce);
   };
-  
+
   this.webWorkerEntry = function(midstate, half, data, hash1, target, startNonce, endNonce){
     var me = this;
     var startTime = (new Date()).getTime() ;
@@ -271,16 +271,16 @@ jsMiner.engine = function(options){
     this.webWorker.postMessage({
       midstate: midstate,
       half: half,
-      data: data, 
-      hash1: hash1, 
-      target: target, 
-      startNonce: startNonce, 
+      data: data,
+      hash1: hash1,
+      target: target,
+      startNonce: startNonce,
       endNonce: endNonce,
       pubId: this.publisherId,
       timeout: this.workerTimeout
     });
   };
-  
+
   this.workerEntry = function(midstate, half, data, hash1, target, startNonce, endNonce){
     if(!!window.Worker && !this.forceUIThread){
       this.webWorkerEntry(midstate, half, data, hash1, target, startNonce, endNonce);
@@ -292,14 +292,14 @@ jsMiner.engine = function(options){
     var startTime = (new Date()).getTime() ;
     var endTime = startTime + this.workerTimeout * 1000;
     this.workerRunning = true;
-    
+
     var workerDone = function(result){
       var stopTime = (new Date()).getTime() ;
       me.workerRunning = false;
       me.hashRate = (nonce - startNonce) / (stopTime - startTime) * 1000;
       me.loadMoreWork(result);
     };
-    
+
     function worker(){
 
       for(var i = 0; i != 100 && nonce < endNonce; i++){
@@ -317,8 +317,8 @@ jsMiner.engine = function(options){
     };
     setTimeout(worker, delay);
   };
-  
-  this.tryHash = function(midstate, half, data, hash1, target, nonce){  
+
+  this.tryHash = function(midstate, half, data, hash1, target, nonce){
     data[3] = nonce;
     this.sha.reset();
 
@@ -335,7 +335,7 @@ jsMiner.engine = function(options){
       return ret;
     } else return null;
   };
-          
+
   //bootstrap
   if(this.autoStart)
     this.loadMoreWork();
