@@ -11,7 +11,7 @@ jsMiner.Util = {
     }
     return arr;
   },
-  
+
   uint32_array_to_hex: function(arr) {
     var hex = '';
     for (var i = 0; i < arr.length; i++) {
@@ -22,7 +22,7 @@ jsMiner.Util = {
     }
     return hex;
   },
-  
+
   byte_to_hex: function(b) {
     var tab = '0123456789abcdef';
     b = b & 0xff;
@@ -36,7 +36,7 @@ jsMiner.Util = {
            ((w >>>  8) & 0x0000ff00) |
            ((w >>> 24) & 0x000000ff);
   },
-  
+
   reverseBytesInWords: function(words) {
     var reversed = [];
     for(var i = 0; i < words.length; i++)
@@ -47,7 +47,7 @@ jsMiner.Util = {
   fromPoolString: function(hex) {
     return jsMiner.Util.reverseBytesInWords(jsMiner.Util.hex_to_uint32_array(hex));
   },
-  
+
   toPoolString: function(data) {
     return jsMiner.Util.uint32_array_to_hex(jsMiner.Util.reverseBytesInWords(data));
   }
